@@ -1,0 +1,30 @@
+{
+    "name": "agenciafmd/admix-components",
+    "description": "A opinionated components based on blade-ui-kit - Agência F&MD",
+    "homepage": "https://github.com/agenciafmd/admix-components",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Irineu Junior",
+            "email": "irineu@fmd.ag",
+            "homepage": "https://fmd.ag/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "laravel/framework": "^9.0",
+        "spatie/laravel-medialibrary": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Agenciafmd\\Components\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Agenciafmd\\Components\\Providers\\ComponentsServiceProvider"
+            ]
+        }
+    }
+}
