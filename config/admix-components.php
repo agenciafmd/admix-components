@@ -3,6 +3,7 @@
 use Agenciafmd\Components\Blade\Buttons;
 use Agenciafmd\Components\Blade\Cards;
 use Agenciafmd\Components\Blade\Forms;
+use Agenciafmd\Components\Blade\Pages;
 
 return [
     'blade' => [
@@ -18,5 +19,7 @@ return [
         'form.password' => Forms\Inputs\Password::class,
         'card.title' => Cards\Title::class,
         'card.subtitle' => Cards\Subtitle::class,
+        'page.header' => Pages\Header::class,
+        'page.form' => Pages\Form::class,
     ]
 ];
