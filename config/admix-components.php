@@ -17,6 +17,7 @@ return [
         'form.input' => Forms\Inputs\Input::class,
         'form.checkbox' => Forms\Inputs\Checkbox::class,
         'form.password' => Forms\Inputs\Password::class,
+        'form.plaintext' => Forms\Inputs\Plaintext::class,
         'card.title' => Cards\Title::class,
         'card.subtitle' => Cards\Subtitle::class,
         'page.header' => Pages\Header::class,
