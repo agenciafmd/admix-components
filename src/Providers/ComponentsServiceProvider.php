@@ -2,11 +2,9 @@
 
 namespace Agenciafmd\Components\Providers;
 
-use Agenciafmd\Components\Blade\Forms\Inputs\Input;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
+use Livewire\Livewire;
 
 class ComponentsServiceProvider extends ServiceProvider
 {
@@ -14,6 +12,7 @@ class ComponentsServiceProvider extends ServiceProvider
     {
         $this->loadViews();
         $this->loadTranslations();
+        $this->loadLivewireComponents();
         $this->loadBladeComponents();
     }
 
@@ -34,7 +33,7 @@ class ComponentsServiceProvider extends ServiceProvider
 
     private function loadConfigs(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../../config/admix-components.php', 'admix-components');
+        $this->mergeConfigFrom(__DIR__ . '/../../config/admix-components.php', 'admix-components');
     }
 
     private function loadBladeComponents(): void
@@ -42,6 +41,15 @@ class ComponentsServiceProvider extends ServiceProvider
         $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
             foreach (config('admix-components.blade', []) as $alias => $component) {
                 $blade->component($component, $alias);
+            }
+        });
+    }
+
+    private function loadLivewireComponents(): void
+    {
+        $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
+            foreach (config('admix-components.livewire', []) as $alias => $component) {
+                Livewire::component($alias, $component);
             }
         });
     }
