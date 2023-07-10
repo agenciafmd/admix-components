@@ -10,31 +10,30 @@
                     x-bind:aria-expanded="open">
                 @lang('Columns')
             </button>
-
             <div class="dropdown-menu dropdown-menu-end w-100" x-bind:class="{ 'show': open }"
                  aria-labelledby="columnSelect-{{ $component->getTableName() }}">
-                <div class="form-check ms-2">
-                    <input
-                            @if ($component->allDefaultVisibleColumnsAreSelected()) checked
-                            wire:click="deselectAllColumns"
-                            @else
-                                unchecked
-                            wire:click="selectAllColumns" @endif
-                            wire:loading.attr="disabled" type="checkbox" class="form-check-input"/>
-                    <label wire:loading.attr="disabled" class="form-check-label">
-                        {{ __('All Columns') }}
-                    </label>
-                </div>
+                <label wire:loading.attr="disabled" class="dropdown-item">
+                    <input type="checkbox"
+                           @if ($component->allDefaultVisibleColumnsAreSelected())
+                               checked
+                           wire:click="deselectAllColumns"
+                           @else
+                               unchecked
+                           wire:click="selectAllColumns"
+                           @endif
+                           wire:loading.attr="disabled" class="form-check-input m-0 me-2"/>
+                    {{ __('All Columns') }}
+                </label>
                 @foreach ($component->getColumns() as $column)
                     @if ($column->isVisible() && $column->isSelectable())
-                        <div wire:key="columnSelect-{{ $loop->index }}-{{ $component->getTableName() }}"
-                             class="form-check ms-2">
-                            <input wire:model="selectedColumns" wire:target="selectedColumns"
-                                   wire:loading.attr="disabled" type="checkbox" class="form-check-input"
-                                   value="{{ $column->getSlug() }}"/>
+                        <div wire:key="columnSelect-{{ $loop->index }}-{{ $component->getTableName() }}">
                             <label wire:loading.attr="disabled" wire:target="selectedColumns"
-                                   class="{{ $loop->last ? 'mb-0' : 'mb-1' }} form-check-label">{{ $column->getTitle() }}</label>
-
+                                   class="dropdown-item">
+                                <input type="checkbox"
+                                       wire:model="selectedColumns" wire:target="selectedColumns"
+                                       wire:loading.attr="disabled" class="form-check-input m-0 me-2"
+                                       value="{{ $column->getSlug() }}"/>
+                                {{ Str::of($column->getTitle())->ucfirst() }}
                             </label>
                         </div>
                     @endif
