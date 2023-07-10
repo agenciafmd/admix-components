@@ -10,6 +10,7 @@ class ComponentsServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
+        $this->providers();
         $this->loadViews();
         $this->loadTranslations();
         $this->loadLivewireComponents();
@@ -19,6 +20,11 @@ class ComponentsServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->loadConfigs();
+    }
+
+    private function providers(): void
+    {
+        $this->app->register(BladeServiceProvider::class);
     }
 
     private function loadViews(): void
@@ -38,11 +44,7 @@ class ComponentsServiceProvider extends ServiceProvider
 
     private function loadBladeComponents(): void
     {
-        $this->callAfterResolving(BladeCompiler::class, function (BladeCompiler $blade) {
-            foreach (config('admix-components.blade', []) as $alias => $component) {
-                $blade->component($component, $alias);
-            }
-        });
+        //
     }
 
     private function loadLivewireComponents(): void
