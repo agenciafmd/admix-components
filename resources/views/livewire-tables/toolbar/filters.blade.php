@@ -15,8 +15,8 @@
 
                     @if ($count = $component->getFilterBadgeCount())
                         <span class="badge bg-info">
-                                        {{ $count }}
-                                    </span>
+                            {{ $count }}
+                        </span>
                     @endif
 
                     <span class="caret"></span>
@@ -24,24 +24,22 @@
             </div>
 
             @if ($component->isFilterLayoutPopover())
-                <ul x-cloak class="dropdown-menu w-100" x-bind:class="{ 'show': open }" role="menu">
+                <div x-cloak class="dropdown-menu w-100" x-bind:class="{ 'show': open }" role="menu">
                     @foreach ($component->getVisibleFilters() as $filter)
                         <div wire:key="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}"
-                             class="p-2"
+                             class="dropdown-item"
                              id="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}-wrapper">
                             {{ $filter->render($component) }}
                         </div>
                     @endforeach
-
                     @if ($component->hasAppliedVisibleFiltersWithValuesThatCanBeCleared())
                         <div class="dropdown-divider"></div>
-
                         <button wire:click.prevent="setFilterDefaults" x-on:click="open = false"
                                 class="dropdown-item text-center">
                             @lang('Clear')
                         </button>
                     @endif
-                </ul>
+                </div>
             @endif
         </div>
     </div>
