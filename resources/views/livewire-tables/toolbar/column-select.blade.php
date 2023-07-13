@@ -5,12 +5,14 @@
              x-on:mousedown.away="if (!childElementOpen) { open = false }"
              class="dropdown d-block d-md-inline"
              wire:key="column-select-button-{{ $component->getTableName() }}">
-            <button x-on:click="open = !open" class="btn dropdown-toggle d-block w-100 d-md-inline"
+            <button x-on:click="open = !open"
+                    class="btn dropdown-toggle d-block w-100 d-md-inline"
+                    x-bind:class="{ 'show': open }"
                     type="button" id="columnSelect-{{ $component->getTableName() }}" aria-haspopup="true"
                     x-bind:aria-expanded="open">
                 @lang('Columns')
             </button>
-            <div class="dropdown-menu dropdown-menu-end w-100" x-bind:class="{ 'show': open }"
+            <div class="dropdown-menu w-100" x-bind:class="{ 'show': open }"
                  aria-labelledby="columnSelect-{{ $component->getTableName() }}">
                 <label wire:loading.attr="disabled" class="dropdown-item">
                     <input type="checkbox"

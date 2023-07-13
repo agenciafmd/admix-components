@@ -7,7 +7,7 @@
                 @lang('Bulk Actions')
             </button>
 
-            <div class="dropdown-menu dropdown-menu-end w-100"
+            <div class="dropdown-menu w-100"
                  aria-labelledby="{{ $component->getTableName() }}-bulkActionsDropdown">
                 @foreach ($component->getBulkActions() as $action => $title)
                     <a href="#" wire:click.prevent="{{ $action }}"
