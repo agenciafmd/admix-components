@@ -11,7 +11,6 @@ return [
     'blade' => [
         'btn' => Buttons\Button::class,
         'btn.primary' => Buttons\Primary::class,
-        'btn.create' => Buttons\Create::class,
         'btn.submit' => Buttons\Submit::class,
         'card.title' => Cards\Title::class,
         'card.subtitle' => Cards\Subtitle::class,
