@@ -6,11 +6,16 @@
              class="btn-group d-block d-md-inline">
             <div>
                 <button type="button" class="btn dropdown-toggle d-block w-100 d-md-inline"
-                        @if ($component->isFilterLayoutPopover()) x-on:click="open = !open"
+                        @if ($component->isFilterLayoutPopover())
+                            x-on:click="open = !open"
                         aria-haspopup="true"
                         x-bind:aria-expanded="open"
-                        aria-expanded="true" @endif
-                        @if ($component->isFilterLayoutSlideDown()) x-on:click="filtersOpen = !filtersOpen" @endif>
+                        aria-expanded="true"
+                        x-bind:class="{ 'show': open }"
+                        @endif
+                        @if ($component->isFilterLayoutSlideDown())
+                            x-on:click="filtersOpen = !filtersOpen"
+                        @endif>
                     @lang('Filters')
 
                     @if ($count = $component->getFilterBadgeCount())
@@ -27,7 +32,7 @@
                 <div x-cloak class="dropdown-menu w-100" x-bind:class="{ 'show': open }" role="menu">
                     @foreach ($component->getVisibleFilters() as $filter)
                         <div wire:key="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}"
-                             class="dropdown-item"
+                             class="dropdown-item d-block"
                              id="{{ $component->getTableName() }}-filter-{{ $filter->getKey() }}-wrapper">
                             {{ $filter->render($component) }}
                         </div>

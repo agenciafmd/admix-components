@@ -5,7 +5,7 @@
             <div class="col-auto ms-auto d-print-none">
                 <div class="d-flex">
                     @foreach($headerActions as $action)
-                        <div class="ms-0 ms-md-2">
+                        <div class="ms-2">
                             {!! Blade::render($action) !!}
                         </div>
                     @endforeach

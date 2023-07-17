@@ -1,5 +1,5 @@
 @if ($component->searchIsEnabled() && $component->searchVisibilityIsEnabled())
-    <div class="input-group input-group-flat">
+    <div class="input-group input-group-flat ms-0 ms-md-2 mb-3 mb-md-0">
         <input wire:model{{ $component->getSearchOptions() }}="{{ $component->getTableName() }}.search"
                placeholder="{{ __('Search') }}" type="text" class="form-control" autocomplete="off">
         @if ($component->hasSearch())
