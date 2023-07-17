@@ -1,7 +1,4 @@
-<button x-data="{}"
-        x-on:click="window.livewire.emitTo('modal.confirm', 'showConfirmationToDelete', '{{ $path }}')"
-        {!! count($attributes) ? $column->arrayToAttributes($attributes) : '' !!}
->
+<a href="{{ $path }}" {!! count($attributes) ? $column->arrayToAttributes($attributes) : '' !!}>
     <svg xmlns="http://www.w3.org/2000/svg"
          class="icon d-sm-none d-block m-0"
          width="24"
@@ -13,9 +10,9 @@
          stroke-linecap="round"
          stroke-linejoin="round"
     >
-        <use xlink:href="{{ asset('vendor/admix/images/tabler-sprite.svg') }}#tabler-trash"/>
+        <use xlink:href="{{ asset('vendor/admix/images/tabler-sprite.svg') }}#tabler-pencil"/>
     </svg>
     <span class="d-none d-sm-block">
         {{ $title }}
     </span>
-</button>
+</a>

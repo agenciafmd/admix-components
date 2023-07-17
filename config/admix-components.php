@@ -10,8 +10,10 @@ use Agenciafmd\Components\Livewire\Modals as LivewireModals;
 return [
     'blade' => [
         'btn' => Buttons\Button::class,
+        'btn.create' => Buttons\Create::class,
         'btn.primary' => Buttons\Primary::class,
         'btn.submit' => Buttons\Submit::class,
+        'btn.trash' => Buttons\Trash::class,
         'card.title' => Cards\Title::class,
         'card.subtitle' => Cards\Subtitle::class,
         'form' => Forms\Form::class,
