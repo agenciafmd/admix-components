@@ -13,7 +13,7 @@
            id="{{ $id }}"
            @if($value) value="{{ $value }}" @endif
            {{ $checked ? 'checked' : '' }}
-           @if(!$value && !$attributes->whereStartsWith('wire:model')->first()) wire:model.lazy="{{ $name }}" @endif
+           @if(!Str::of($name)->endsWith('[]') && !$attributes->whereStartsWith('wire:model')->first()) wire:model.lazy="{{ $name }}" @endif
             {{ $attributes->whereDoesntStartWith('class')->class(['form-check-input', ...$inputClass, 'is-invalid' => $errors->has($name)]) }}
             {{ $attributes }}
     />
