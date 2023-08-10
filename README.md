@@ -173,6 +173,36 @@ We can customize the checkbox to act like a switch
 
 ![blade-components-form-checkbox-switch](docs/blade-components-form-checkbox-switch.png)
 
+#### Select
+
+![form.select](docs/blade-components-form-select.png)
+
+Basic usage
+
+```html
+
+<x-form.select name="user.role_id"
+               :label="__('admix::fields.role_id')"
+               :options="[1 => 'Administrator', 2 => 'Editor', 3 => 'User']"
+               :placeholder="__('Choose a role')"
+/>
+```
+
+This will output the following HTML
+
+```html
+<label for="user.role_id" class="form-label">
+    Grupo
+</label>
+<select name="user.role_id" id="user.role_id" wire:model.lazy="user.role_id" class="form-select">
+    <option value="">Choose a role</option>
+    <option value="1">Administrator</option>
+    <option value="2">Editor</option>
+    <option value="3">User</option>
+</select>
+```
+
+
 ## License
 
 Admix Components is open-sourced software licensed under [the MIT license](LICENSE.md).
