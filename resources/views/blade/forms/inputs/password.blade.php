@@ -12,7 +12,7 @@
             {{ $attributes->class(['form-control', 'is-invalid' => $errors->has($name)]) }}
             {{ $attributes }}
     />
-    <span class="input-group-text">
+    <span class="input-group-text ps-0">
         <a href="#"
            @click="isPassword = !isPassword"
            :class="isPassword ? 'd-block' : 'd-none'"
