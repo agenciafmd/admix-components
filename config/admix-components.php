@@ -31,5 +31,6 @@ return [
     ],
     'livewire' => [
         'modal.confirm' => LivewireModals\Confirm::class,
+        'modal.html' => LivewireModals\Html::class,
     ]
 ];

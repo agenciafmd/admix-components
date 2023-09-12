@@ -62,37 +62,39 @@
                     @if($type)
                         <h3>{{ $title }}</h3>
                         <div class="text-muted">
-                            {{ $slot }}
+                            {!! $slot !!}
                         </div>
                     @else
-                        {{ $slot }}
+                            {!! $slot !!}
                     @endif
                 </div>
 
                 @if($footer)
                     {{ $footer }}
                 @else
-                    <div class="modal-footer">
-                        @if($type)
-                            <div class="w-100">
-                                <div class="row">
-                                    <div class="col">
-                                        <button x-on:click="show = false" class="btn w-100">
-                                            {{ __('No') }}
-                                        </button>
+                        @if($action)
+                            <div class="modal-footer">
+                                @if($type)
+                                    <div class="w-100">
+                                        <div class="row">
+                                            <div class="col">
+                                                <button x-on:click="show = false" class="btn w-100">
+                                                    {{ __('No') }}
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button wire:click="{{ $action }}" class="btn btn-{{ $type }} w-100">
+                                                    {{ __('Yes') }}
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <button wire:click="{{ $action }}" class="btn btn-{{ $type }} w-100">
-                                            {{ __('Yes') }}
-                                        </button>
-                                    </div>
-                                </div>
+                                @else
+                                    <button x-on:click="show = false" class="btn me-auto">{{ __('No') }}</button>
+                                    <button wire:click="{{ $action }}" class="btn btn-primary">{{ __('Yes') }}</button>
+                                @endif
                             </div>
-                        @else
-                            <button x-on:click="show = false" class="btn me-auto">{{ __('No') }}</button>
-                            <button wire:click="{{ $action }}" class="btn btn-primary">{{ __('Yes') }}</button>
                         @endif
-                    </div>
                 @endif
             </div>
         </div>
