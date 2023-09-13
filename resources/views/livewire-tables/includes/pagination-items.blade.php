@@ -18,7 +18,7 @@
         @else
             <li class="page-item px-1">
                 <button type="button"
-                        dusk="previousPage{{ $paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName() }}"
+                        dusk="previousPage{{ $paginator->getPageName() === 'page' ? '' : '.' . $paginator->getPageName() }}"
                         class="page-link"
                         wire:click="previousPage('{{ $paginator->getPageName() }}')"
                         wire:loading.attr="disabled"
@@ -70,7 +70,7 @@
         @if ($paginator->hasMorePages())
             <li class="page-item px-1">
                 <button type="button"
-                        dusk="nextPage{{ $paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName() }}"
+                        dusk="nextPage{{ $paginator->getPageName() === 'page' ? '' : '.' . $paginator->getPageName() }}"
                         class="page-link" wire:click="nextPage('{{ $paginator->getPageName() }}')"
                         wire:loading.attr="disabled" rel="next" aria-label="@lang('pagination.next')">
                     <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
