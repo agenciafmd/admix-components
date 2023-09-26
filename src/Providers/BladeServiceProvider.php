@@ -46,12 +46,12 @@ class BladeServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../../resources/views/livewire-tables/vendor/components' => base_path('resources/views/vendor/livewire-tables/components'),
-        ], ['admix-views']);
+        ], ['admix-components:views']);
 
         $this->publishes([
-            __DIR__ . '/../resources/views/livewire-tables/columns' => base_path('resources/views/vendor/agenciafmd/admix-components/livewire-tables/columns'),
-            __DIR__ . '/../resources/views/livewire-tables/includes' => base_path('resources/views/vendor/agenciafmd/admix-components/livewire-tables/includes'),
-            __DIR__ . '/../resources/views/livewire-tables/toolbar' => base_path('resources/views/vendor/agenciafmd/admix-components/livewire-tables/toolbar'),
-        ], ['admix-components-livewire-tables']);
+            __DIR__ . '/../../resources/views/livewire-tables/columns' => base_path('resources/views/vendor/agenciafmd/admix-components/livewire-tables/columns'),
+            __DIR__ . '/../../resources/views/livewire-tables/includes' => base_path('resources/views/vendor/agenciafmd/admix-components/livewire-tables/includes'),
+            __DIR__ . '/../../resources/views/livewire-tables/toolbar' => base_path('resources/views/vendor/agenciafmd/admix-components/livewire-tables/toolbar'),
+        ], ['admix-components:livewire-tables']);
     }
 }

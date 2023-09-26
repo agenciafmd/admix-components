@@ -7,7 +7,7 @@
         $theme = $component->getTheme();
         $colspan = $component->getColspanCount();
         $selectAll = $component->selectAllIsEnabled();
-        $simplePagination = $component->paginationMethod == 'simple' ? true : false;
+        $simplePagination = $component->paginationMethod === 'simple' ? true : false;
     @endphp
 
     <x-livewire-tables::table.tr.plain
@@ -26,8 +26,7 @@
                         @lang('rows').
                     </span>
 
-                    <button
-                            x-on:click="clearSelected"
+                    <button x-on:click="clearSelected"
                             wire:loading.attr="disabled"
                             type="button"
                             class="btn btn-link btn-sm text-secondary text-decoration-none"
@@ -49,8 +48,7 @@
                         @lang('rows?')
                     </span>
                     <div>
-                        <button
-                                x-on:click="selectAllOnPage"
+                        <button x-on:click="selectAllOnPage"
                                 wire:loading.attr="disabled"
                                 type="button"
                                 class="btn btn-link btn-sm text-secondary text-decoration-none"
@@ -58,8 +56,7 @@
                             @lang('Select all on page')
                         </button>&nbsp;
 
-                        <button
-                                x-on:click="setAllSelected"
+                        <button x-on:click="setAllSelected"
                                 wire:loading.attr="disabled"
                                 type="button"
                                 class="btn btn-link btn-sm text-secondary text-decoration-none"
@@ -67,8 +64,7 @@
                             @lang('Select all')
                         </button>
 
-                        <button
-                                x-on:click="clearSelected"
+                        <button x-on:click="clearSelected"
                                 wire:loading.attr="disabled"
                                 type="button"
                                 class="btn btn-link btn-sm text-secondary text-decoration-none"
