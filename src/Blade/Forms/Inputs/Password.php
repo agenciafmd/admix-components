@@ -13,9 +13,10 @@ class Password extends Input
         ?string $value = '',
         ?string $label = '',
         ?string $hint = '',
+        bool $disabled = false,
     )
     {
-        parent::__construct($name, $id, 'password', $value, $label, $hint);
+        parent::__construct($name, $id, 'password', $value, $label, $hint, $disabled);
     }
 
     public function render(): View

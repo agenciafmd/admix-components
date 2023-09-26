@@ -6,6 +6,7 @@
 <select name="{{ $name }}"
         id="{{ $id }}"
         @if($value) value="{{ $value }}" @endif
+        @if($disabled) disabled @endif
         @if(!$value && !$attributes->whereStartsWith('wire:model')->first()) wire:model.lazy="{{ $name }}" @endif
         {{ $attributes->class(['form-select', 'is-invalid' => $errors->has($name)]) }}
         {{ $attributes }}

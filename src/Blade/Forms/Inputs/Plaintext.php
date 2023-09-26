@@ -9,14 +9,17 @@ class Plaintext extends Component
 {
     public string $value;
     public string $label;
+    public bool $disabled;
 
     public function __construct(
         string  $value = '',
         ?string $label = '',
+        bool $disabled = false,
     )
     {
         $this->value = $value;
         $this->label = $label;
+        $this->disabled = $disabled;
     }
 
     public function render(): View

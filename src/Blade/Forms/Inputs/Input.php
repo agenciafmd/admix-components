@@ -13,6 +13,7 @@ class Input extends Component
     public string $value;
     public string $label;
     public string $hint;
+    public bool $disabled;
 
     public function __construct(
         string $name,
@@ -21,6 +22,7 @@ class Input extends Component
         ?string $value = '',
         ?string $label = '',
         ?string $hint = '',
+        bool $disabled = false,
     )
     {
         $this->name = $name;
@@ -29,6 +31,7 @@ class Input extends Component
         $this->value = old($name, $value ?? '');
         $this->label = $label;
         $this->hint = $hint;
+        $this->disabled = $disabled;
     }
 
     public function render(): View

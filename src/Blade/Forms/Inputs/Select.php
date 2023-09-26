@@ -14,6 +14,7 @@ class Select extends Component
     public string $label;
     public string $hint;
     public string $placeholder;
+    public bool $disabled;
 
     public function __construct(
         string  $name,
@@ -23,6 +24,7 @@ class Select extends Component
         ?string $label = '',
         ?string $hint = '',
         ?string $placeholder = '',
+        bool $disabled = false,
     )
     {
         $this->name = $name;
@@ -32,6 +34,7 @@ class Select extends Component
         $this->label = $label;
         $this->hint = $hint;
         $this->placeholder = $placeholder;
+        $this->disabled = $disabled;
     }
 
     public function render(): View

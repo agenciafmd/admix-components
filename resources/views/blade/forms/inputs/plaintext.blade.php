@@ -1,6 +1,6 @@
 @if($label)
-    <x-form.label for="{{ Str::of($label)->studly() }}Plaintext">
+    <x-form.label for="{{ Str::of($label)->slug()->studly() }}Plaintext">
         {{ Str::of($label)->ucfirst() }}
     </x-form.label>
 @endif
-<div class="form-control-plaintext" id="{{ Str::of($label)->studly() }}Plaintext">{{ $value }}</div>
+<div class="form-control-plaintext" id="{{ Str::of($label)->slug()->studly() }}Plaintext">{{ $value }}</div>
