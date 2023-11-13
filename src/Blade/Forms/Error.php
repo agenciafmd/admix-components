@@ -2,8 +2,8 @@
 
 namespace Agenciafmd\Components\Blade\Forms;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\ViewErrorBag;
-use Illuminate\View\View;
 use Illuminate\View\Component;
 
 class Error extends Component
