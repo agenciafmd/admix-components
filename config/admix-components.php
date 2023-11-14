@@ -25,6 +25,7 @@ return [
         'form.password' => Forms\Inputs\Password::class,
         'form.plaintext' => Forms\Inputs\Plaintext::class,
         'form.select' => Forms\Inputs\Select::class,
+        'form.file' => Forms\Inputs\File::class,
         'modal' => Modals\Modal::class,
         'page.header' => Pages\Header::class,
         'page.form' => Pages\Form::class,
