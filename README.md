@@ -202,6 +202,115 @@ This will output the following HTML
 </select>
 ```
 
+#### File
+
+![form.file](docs/blade-components-form-file.png)
+
+Basic usage
+
+```html
+
+<x-form.file name="media.avatar"
+             :label="__('admix::fields.media.avatar')"
+/>
+```
+
+This will output the following HTML
+
+```html
+<label for="avatar" class="form-label">
+    Avatar
+</label>
+<div class="input-group input-group-flat">
+    <input name="avatar" type="file" accept=".jpeg,.jpg,.png,.gif" id="avatar" wire:model.lazy="media.avatar"
+           class="form-control">
+</div>
+<small class="form-hint">
+    Allowed formats: jpeg, jpg, png e gif<br>Maximum size: 512KB<br>Min dimensions: 400x400
+</small>
+```
+
+**Model**
+
+We use [spatie/laravel-medialibrary](https://github.com/spatie/laravel-medialibrary) to handle with media files. So, you
+need to prepare your model to use it.
+
+Add `Agenciafmd\Components\Traits\InteractsWithMediaUploads` instead of `Spatie\MediaLibrary\InteractsWithMedia` trait.
+
+Declare the `mappedMedia` property, to handle with the uploads.
+
+```php
+...
+use Agenciafmd\Components\Traits\InteractsWithMediaUploads;
+...
+
+class User extends Model implements HasMedia
+{
+    use InteractsWithMediaUploads;
+
+    public array $mappedMedia = [
+        'avatar' => [
+            'single' => true,
+            'rules' => [
+                'bail', /* usar até o livewire 3, porque a implementação do dimensions funciona somente nele */
+                'max:512',
+                'image',
+                'dimensions:min_width=1024,min_height=576',
+            ],
+        ],
+    ];
+```
+
+**Component**
+
+Now, customize the component to handle with the media uploads.
+
+```php
+...
+use Agenciafmd\Components\Traits\WithMediaUploads;
+...
+
+class MyAccount extends Component
+{
+    use WithMediaUploads;
+
+    public array $media = [];
+
+    protected $listeners = [
+        'deleteMedia' => 'deleteMedia',
+    ];
+
+    public function mount(): void
+    {
+        ...
+        $this->media = $this->model->loadMappedMedia();
+    }
+    
+    public function rules(): array
+    {
+        return array_merge([
+            ...
+        ], $this->model->loadMappedMediaRules($this->media));
+    }
+
+    public function attributes(): array
+    {
+        return [
+            ...
+            'media.avatar' => __('admix::fields.media.avatar'),
+        ];
+    }
+    
+    public function submit(): null|Redirector|RedirectResponse
+    {
+        $data = $this->validate($this->rules(), [], $this->attributes());
+
+        try {
+            if ($this->model->save()) {
+                $this->model->syncMedia($data['media']);
+        ...
+    }    
+```
 
 ## License
 

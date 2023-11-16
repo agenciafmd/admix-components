@@ -6,20 +6,54 @@
 <div @class([
         'input-group',
         'input-group-flat',
-        'is-invalid' => ($tmp && $errors->has('media.'.$name))
+        'is-invalid' => ($errors->has("media.{$name}"))
     ])>
     <input name="{{ $name }}"
            type="file"
+           @if($this->model->mediaAllowedExtensions($name)->count()) accept=".{{ $this->model->mediaAllowedExtensions($name)->join(',.') }}"
+           @endif
            id="{{ $id }}"
            @if($disabled) disabled @endif
-           @if(!$attributes->whereStartsWith('wire:model')->first()) wire:model.lazy="media.{{ $name }}" @endif
-            {{ $attributes->class(['form-control', 'is-invalid' => ($tmp && $errors->has('media.'.$name))]) }}
+           @if(!$attributes->whereStartsWith('wire:model')->first()) wire:model.lazy="{{ "media.{$name}" }}" @endif
+            {{ $attributes->class(['form-control', 'is-invalid' => ($errors->has("media.{$name}"))]) }}
             {{ $attributes }}
     />
-    @if($tmp)
-        {{-- $tmp['name'] --}}
+    @if($this->media[$name])
+        @php
+            if ($this->media[$name] instanceof \Livewire\TemporaryUploadedFile) {
+                try {
+                    $url = $this->media[$name]->temporaryUrl();
+                } catch (\Exception) {
+                    $url = '';
+                }
+
+                $preview = [
+                    'uuid' => Str::orderedUuid()
+                        ->toString(),
+                    'collection' => $name,
+                    'name' => $this->media[$name]->getClientOriginalName(),
+                    'size' => $this->media[$name]->getSize(),
+                    'url' => $url,
+                ];
+            }
+            else {
+                if ($this->media[$name] instanceof \Spatie\MediaLibrary\MediaCollections\Models\Media) {
+                    $this->media[$name] = $this->media[$name]->toArray();
+                }
+
+                $preview = [
+                    'uuid' => $this->media[$name]['uuid'],
+                    'collection' => $name,
+                    'name' => $this->media[$name]['file_name'],
+                    'size' => $this->media[$name]['size'],
+                    'url' => $this->media[$name]['original_url'],
+                ];
+            }
+        @endphp
+        {{--        @dd($this->media[$name])--}}
+        {{--         $tmp['name'] --}}
         <span class="input-group-text">
-            <a wire:click="$emit('deleteMedia', '{{ $tmp['collection'] }}', '{{ $tmp['uuid'] }}')"
+            <a wire:click="$emit('deleteMedia', '{{ $preview['collection'] }}', '{{ $preview['uuid'] }}')"
                class="cursor-pointer link-secondary" data-bs-toggle="tooltip" data-bs-placement="top"
                aria-label="{{ __('Delete') }}" data-bs-original-title="{{ __('Delete') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
@@ -30,8 +64,9 @@
                     <path d="M6 6l12 12"></path>
                 </svg>
             </a>
-            @if($tmp['url'])
-                <a href="{{ $tmp['url'] }}" data-fslightbox="{{ $tmp['collection'] }}" class="link-secondary ms-2"
+            @if($preview['url'])
+                <a href="{{ $preview['url'] }}" data-fslightbox="{{ $preview['collection'] }}"
+                   class="link-secondary ms-2"
                    data-bs-toggle="tooltip" data-bs-placement="top"
                    aria-label="{{ __('View') }}" data-bs-original-title="{{ __('View') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
@@ -44,12 +79,16 @@
                 </a>
             @endif
         </span>
-    @endif
-    <x-form.error field="media.{{ $name }}"/>
-    @if($hint)
-        <x-form.hint message="{{ $hint }}"/>
+        <x-form.error field="media.{{ $name }}"/>
     @endif
 </div>
+    @if($hint)
+        <x-form.hint message="{{ $hint }}"/>
+    @else
+        <x-form.hint>
+            {!! $this->model->mediaHint($name) !!}
+        </x-form.hint>
+    @endif
 
 @pushonce('styles')
     <style>

@@ -8,8 +8,6 @@ trait WithMediaUploads
 {
     use WithFileUploads;
 
-    public array $media = [];
-
     public function deleteMedia(string $collection, string $uuid): void
     {
         $this->model->getMedia($collection)
