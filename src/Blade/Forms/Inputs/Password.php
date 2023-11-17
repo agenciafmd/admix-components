@@ -9,7 +9,6 @@ class Password extends Input
     public function __construct(
         string  $name,
         string  $id = null,
-        bool    $checked = false,
         ?string $value = '',
         ?string $label = '',
         ?string $hint = '',
