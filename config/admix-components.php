@@ -24,6 +24,7 @@ return [
         'form.email' => Forms\Inputs\Email::class,
         'form.file' => Forms\Inputs\File::class,
         'form.input' => Forms\Inputs\Input::class,
+        'form.number' => Forms\Inputs\Number::class,
         'form.password' => Forms\Inputs\Password::class,
         'form.plaintext' => Forms\Inputs\Plaintext::class,
         'form.select' => Forms\Inputs\Select::class,
