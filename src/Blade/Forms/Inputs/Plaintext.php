@@ -12,7 +12,7 @@ class Plaintext extends Component
     public bool $disabled;
 
     public function __construct(
-        string  $value = '',
+        string $value = '',
         ?string $label = '',
         bool $disabled = false,
     )

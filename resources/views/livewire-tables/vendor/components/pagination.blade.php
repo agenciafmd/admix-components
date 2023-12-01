@@ -20,7 +20,9 @@
                 @lang('to')
                 <span>{{ $rows->count() ? $rows->lastItem() : 0 }}</span>
                 @lang('of')
-                <span><span x-text="paginationTotalItemCount"></span></span>
+                <span>
+                    <span x-text="paginationTotalItemCount"></span>
+                </span>
                 @lang('results')
             </p>
 

@@ -22,6 +22,8 @@ class Label extends Component
 
     public function fallback(): string
     {
-        return Str::of($this->for)->ucfirst()->replace('_', ' ');
+        return Str::of($this->for)
+            ->ucfirst()
+            ->replace('_', ' ');
     }
 }

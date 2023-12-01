@@ -12,7 +12,7 @@
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                         <path d="M15 6l-6 6l6 6"></path>
                     </svg>
-{{--                    @lang('pagination.previous')--}}
+                    {{--                    @lang('pagination.previous')--}}
                 </span>
             </li>
         @else
@@ -53,7 +53,9 @@
                         @if ($page === $paginator->currentPage())
                             <li class="page-item px-1 active"
                                 wire:key="paginator-{{ $paginator->getPageName() }}-{{ $this->numberOfPaginatorsRendered[$paginator->getPageName()] }}-page-{{ $page }}"
-                                aria-current="page"><span class="page-link">{{ $page }}</span></li>
+                                aria-current="page">
+                                <span class="page-link">{{ $page }}</span>
+                            </li>
                         @else
                             <li class="page-item px-1"
                                 wire:key="paginator-{{ $paginator->getPageName() }}-{{ $this->numberOfPaginatorsRendered[$paginator->getPageName()] }}-page-{{ $page }}">
@@ -85,7 +87,7 @@
         @else
             <li class="page-item px-1 disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
                 <span class="page-link" aria-hidden="true">
-{{--                    @lang('pagination.next')--}}
+                    {{--                    @lang('pagination.next')--}}
                     <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"

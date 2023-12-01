@@ -11,9 +11,9 @@ class Checkbox extends Input
     public string $labelOff;
 
     public function __construct(
-        string  $name,
-        string  $id = null,
-        bool    $checked = false,
+        string $name,
+        string $id = null,
+        bool $checked = false,
         ?string $value = '',
         ?string $label = '',
         ?string $hint = '',
@@ -24,7 +24,7 @@ class Checkbox extends Input
     {
         parent::__construct($name, $id, 'checkbox', $value, $label, $hint, $disabled);
 
-        $this->checked = (bool)old($name, $checked);
+        $this->checked = (bool) old($name, $checked);
         $this->labelOn = $labelOn;
         $this->labelOff = $labelOff;
     }

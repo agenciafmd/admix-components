@@ -56,8 +56,8 @@
     <style>
         .is-invalid .input-group-text {
             border-color: var(--tblr-danger);
-            border-top-right-radius: var(--tblr-border-radius)!important;
-            border-bottom-right-radius: var(--tblr-border-radius)!important;
+            border-top-right-radius: var(--tblr-border-radius) !important;
+            border-bottom-right-radius: var(--tblr-border-radius) !important;
         }
     </style>
 @endpushonce

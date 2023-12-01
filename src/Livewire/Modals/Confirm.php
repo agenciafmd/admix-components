@@ -11,7 +11,7 @@ class Confirm extends Modal
     public string $action = '';
 
     protected $listeners = [
-        'showConfirmationToDelete' => 'showConfirmationToDelete'
+        'showConfirmationToDelete' => 'showConfirmationToDelete',
     ];
 
     public function showConfirmationToDelete(int $id): void

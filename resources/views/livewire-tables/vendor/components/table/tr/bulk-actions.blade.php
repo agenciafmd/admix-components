@@ -21,7 +21,9 @@
                     <span>
                         @lang('You are currently selecting all')
                         @if(!$simplePagination)
-                            <strong><span x-text="paginationTotalItemCount"></span></strong>
+                            <strong>
+                                <span x-text="paginationTotalItemCount"></span>
+                            </strong>
                         @endif
                         @lang('rows').
                     </span>
@@ -39,11 +41,15 @@
                 <div wire:key="some-selected-{{ $table }}" class="d-flex justify-content-between">
                     <span>
                         @lang('You have selected')
-                        <strong><span x-text="selectedItems.length"></span></strong>
+                        <strong>
+                            <span x-text="selectedItems.length"></span>
+                        </strong>
                         @lang('rows.')
                         @lang('Do you want to select all')
                         @if(!$simplePagination)
-                            <strong><span x-text="paginationTotalItemCount"></span></strong>
+                            <strong>
+                                <span x-text="paginationTotalItemCount"></span>
+                            </strong>
                         @endif
                         @lang('rows?')
                     </span>

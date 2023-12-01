@@ -17,9 +17,9 @@ class Select extends Component
     public bool $disabled;
 
     public function __construct(
-        string  $name,
-        array   $options = [],
-        string  $id = null,
+        string $name,
+        array $options = [],
+        string $id = null,
         ?string $value = '',
         ?string $label = '',
         ?string $hint = '',

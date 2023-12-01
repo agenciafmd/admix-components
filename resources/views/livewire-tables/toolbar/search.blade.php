@@ -5,7 +5,8 @@
         @if ($component->hasSearch())
             <span class="input-group-text">
                 <a href="#" wire:click.prevent="clearSearch" class="link-secondary" -data-bs-toggle="tooltip"
-                   aria-label="{{ __('Clear search') }}" data-bs-original-title="{{ __('Clear search') }}"><!-- Download SVG icon from http://tabler-icons.io/i/x -->
+                   aria-label="{{ __('Clear search') }}" data-bs-original-title="{{ __('Clear search') }}">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/x -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round"><path

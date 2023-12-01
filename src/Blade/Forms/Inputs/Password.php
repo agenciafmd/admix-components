@@ -7,8 +7,8 @@ use Illuminate\Contracts\View\View;
 class Password extends Input
 {
     public function __construct(
-        string  $name,
-        string  $id = null,
+        string $name,
+        string $id = null,
         ?string $value = '',
         ?string $label = '',
         ?string $hint = '',

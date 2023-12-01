@@ -16,13 +16,13 @@ class Textarea extends Component
     public bool $disabled;
 
     public function __construct(
-        string  $name,
-        string  $id = null,
-        string  $rows = '8',
+        string $name,
+        string $id = null,
+        string $rows = '8',
         ?string $value = '',
         ?string $label = '',
         ?string $hint = '',
-        bool    $disabled = false,
+        bool $disabled = false,
     )
     {
         $this->name = $name;

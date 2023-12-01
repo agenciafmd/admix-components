@@ -15,11 +15,11 @@ class File extends Component
     public bool $disabled;
 
     public function __construct(
-        string  $name,
-        string  $id = null,
+        string $name,
+        string $id = null,
         ?string $label = '',
         ?string $hint = '',
-        bool    $disabled = false,
+        bool $disabled = false,
     )
     {
         $this->name = Str::of($name)

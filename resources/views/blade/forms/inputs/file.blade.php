@@ -82,13 +82,13 @@
         <x-form.error field="media.{{ $name }}"/>
     @endif
 </div>
-    @if($hint)
-        <x-form.hint message="{{ $hint }}"/>
-    @else
-        <x-form.hint>
-            {!! $this->model->mediaHint($name) !!}
-        </x-form.hint>
-    @endif
+@if($hint)
+    <x-form.hint message="{{ $hint }}"/>
+@else
+    <x-form.hint>
+        {!! $this->model->mediaHint($name) !!}
+    </x-form.hint>
+@endif
 
 @pushonce('styles')
     <style>
