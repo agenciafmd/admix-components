@@ -5,6 +5,7 @@ namespace Agenciafmd\Components\Traits;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 use Livewire\TemporaryUploadedFile;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -30,7 +31,7 @@ trait InteractsWithMediaUploads
             $mediaCollection = $this->addMediaCollection($collection)
                 ->withResponsiveImages();
             if ($media['single']) {
-                $mediaCollection->singleFile();
+                $mediaCollection = $mediaCollection->singleFile();
             }
             if (in_array('image', $media['rules'], true)) {
                 $mediaCollection->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif']);
@@ -45,6 +46,10 @@ trait InteractsWithMediaUploads
                 ->lower();
         $contents = Storage::get($file);
 
+        if ($this->isImage($collection)) {
+            $contents = $this->resizeImage($contents, $collection);
+        }
+
         $this->addMediaFromString($contents)
             ->usingName($name)
             ->usingFileName($fileName)
@@ -54,14 +59,29 @@ trait InteractsWithMediaUploads
 
     public function syncMedia(array $media): void
     {
-        collect($media)->each(function ($file, $collection) {
-            if ($file instanceof TemporaryUploadedFile) {
-                $file = $file->store('tmp');
+        collect($media)->each(function ($files, $collection) {
+
+            if ($this->isSingleMedia($collection)) {
+                $files = [end($files)];
             }
 
-            if (is_string($file)) {
-                $this->attachMedia($file, $collection);
-            }
+            collect($files)->each(function ($file) use ($collection) {
+                if ($file instanceof TemporaryUploadedFile) {
+                    $file = $file->store('tmp');
+                }
+
+                if (is_string($file)) {
+                    $this->attachMedia($file, $collection);
+                }
+            });
+
+//            if ($file instanceof TemporaryUploadedFile) {
+//                $file = $file->store('tmp');
+//            }
+//
+//            if (is_string($file)) {
+//                $this->attachMedia($file, $collection);
+//            }
         });
     }
 
@@ -77,11 +97,12 @@ trait InteractsWithMediaUploads
     {
         $media = [];
         collect($this->mappedMedia)->each(function ($file, $collection) use (&$media) {
-            if ($file['single']) {
-                $media[$collection] = $this->getFirstMedia($collection);
-            } else {
-                $media[$collection] = $this->getMedia($collection);
-            }
+//            if ($file['single']) {
+//                $media[$collection] = $this->getFirstMedia($collection);
+//            } else {
+            $media[$collection] = $this->getMedia($collection)
+                ->toArray();
+//            }
         });
 
         return $media;
@@ -89,17 +110,37 @@ trait InteractsWithMediaUploads
 
     public function loadMappedMediaRules(mixed $media): array
     {
+        /* todo */
         $rules = [];
         collect($this->mappedMedia)->each(function ($mappedMedia, $collection) use ($media, &$rules) {
-            $media[$collection] instanceof TemporaryUploadedFile
-                ? $rules["media.{$collection}"] = $mappedMedia['rules']
-                : $rules["media.{$collection}"] = [
-                'nullable',
-                'array',
-            ];
+//            if ($mappedMedia['single']) {
+//                $rules["media.{$collection}"] = $mappedMedia['rules'];
+//            } else {
+            $rules["media.{$collection}.*"] = $mappedMedia['rules'];
+//            }
+//            $media[$collection] instanceof TemporaryUploadedFile
+//                ? $rules["media.{$collection}"] = $mappedMedia['rules']
+//                : $rules["media.{$collection}"] = [
+//                'nullable',
+//                'array',
+//            ];
         });
 
         return $rules;
+    }
+
+    public function initMappedMedia(): array
+    {
+        $media = [];
+        collect($this->mappedMedia)->each(function ($file, $collection) use (&$media) {
+//            if ($file['single']) {
+//                $media[$collection] = null;
+//            } else {
+            $media[$collection] = [];
+//            }
+        });
+
+        return $media;
     }
 
     public function mediaHint(string $collection): string
@@ -190,9 +231,29 @@ trait InteractsWithMediaUploads
     private function mediaHintDimensions(string $collection): array
     {
         $hint = [];
+        $dimensions = $this->extractDimensionsFromRules($collection);
+        if ($dimensions->count()) {
+            if (isset($dimensions['min_width'], $dimensions['min_height'])) {
+                $hint[] = __('Min dimensions: :dimensions', [
+                    'dimensions' => $dimensions['min_width'] . 'x' . $dimensions['min_height'],
+                ]);
+            }
+
+            if (isset($dimensions['max_width'], $dimensions['max_height'])) {
+                $hint[] = __('Max dimensions: :dimensions', [
+                    'dimensions' => $dimensions['max_width'] . 'x' . $dimensions['max_height'],
+                ]);
+            }
+        }
+
+        return $hint;
+    }
+
+    private function extractDimensionsFromRules(string $collection): Collection
+    {
         $rules = $this->mappedMedia[$collection]['rules'];
 
-        $dimensions = collect($rules)
+        return collect($rules)
             ->map(function ($rule) {
                 if (Str::of($rule)
                     ->startsWith('dimensions:')) {
@@ -213,20 +274,33 @@ trait InteractsWithMediaUploads
                     $localDimension[0] => $localDimension[1],
                 ];
             });
-        if ($dimensions->count()) {
-            if (isset($dimensions['min_width'], $dimensions['min_height'])) {
-                $hint[] = __('Min dimensions: :dimensions', [
-                    'dimensions' => $dimensions['min_width'] . 'x' . $dimensions['min_height'],
-                ]);
-            }
+    }
 
-            if (isset($dimensions['max_width'], $dimensions['max_height'])) {
-                $hint[] = __('Max dimensions: :dimensions', [
-                    'dimensions' => $dimensions['max_width'] . 'x' . $dimensions['max_height'],
-                ]);
-            }
+    private function isImage(string $collection): bool
+    {
+        return in_array('image', $this->mappedMedia[$collection]['rules'], true);
+    }
+
+    private function resizeImage(string $contents, string $collection): string
+    {
+        $dimensions = $this->extractDimensionsFromRules($collection);
+        if (!$dimensions->count()) {
+            return $contents;
         }
 
-        return $hint;
+        $width = $dimensions['max_width'] ?? $dimensions['min_width'] ? $dimensions['min_width'] * 2 : null;
+        $height = $dimensions['max_height'] ?? $dimensions['min_height'] ? $dimensions['min_height'] * 2 : null;
+
+        return Image::make($contents)
+            ->fit($width, $height, function ($constraint) {
+                $constraint->upsize();
+            })
+            ->encode()
+            ->__toString();
+    }
+
+    public function isSingleMedia(string $collection): bool
+    {
+        return $this->mappedMedia[$collection]['single'];
     }
 }

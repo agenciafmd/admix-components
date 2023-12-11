@@ -6,54 +6,55 @@
 <div @class([
         'input-group',
         'input-group-flat',
-        'is-invalid' => ($errors->has("media.{$name}"))
+        'is-invalid' => ($errors->has("media.{$name}.*"))
     ])>
     <input name="{{ $name }}"
            type="file"
+           {{--           multiple--}}
            @if($this->model->mediaAllowedExtensions($name)->count()) accept=".{{ $this->model->mediaAllowedExtensions($name)->join(',.') }}"
            @endif
            id="{{ $id }}"
            @if($disabled) disabled @endif
            @if(!$attributes->whereStartsWith('wire:model')->first()) wire:model.lazy="{{ "media.{$name}" }}" @endif
-            {{ $attributes->class(['form-control', 'is-invalid' => ($errors->has("media.{$name}"))]) }}
+            {{ $attributes->class(['form-control', 'is-invalid' => ($errors->has("media.{$name}.*"))]) }}
             {{ $attributes }}
     />
-    @if($this->media[$name])
+    {{--    @dump($this->media[$name])--}}
+    <!-- TODO: temp file está sendo enviado como array, verificar se é um bug do livewire -->
+    @php
+        $files = [];
+        array_push($files, ...$this->media[$name], ...$this->loadedMedia[$name]);
+        if(count($files) > 1) {
+            $files = [reset($files)];
+        }
+    @endphp
+
+    @foreach($files as $key => $file)
         @php
-            if ($this->media[$name] instanceof \Livewire\TemporaryUploadedFile) {
+            $isTemporary = ($file instanceof \Livewire\TemporaryUploadedFile);
+            if ($isTemporary) {
                 try {
-                    $url = $this->media[$name]->temporaryUrl();
+                    $tmpFile['original_url'] = $file->temporaryUrl();
                 } catch (\Exception) {
-                    $url = '';
+                    $tmpFile['original_url'] = '';
                 }
 
-                $preview = [
-                    'uuid' => Str::orderedUuid()
-                        ->toString(),
-                    'collection' => $name,
-                    'name' => $this->media[$name]->getClientOriginalName(),
-                    'size' => $this->media[$name]->getSize(),
-                    'url' => $url,
-                ];
+                $tmpFile['file_name'] = $file->getClientOriginalName();
+                $tmpFile['size'] = $file->getSize();
+                $tmpFile['uuid'] = $key;
+//                $tmpFile['uuid'] = Str::orderedUuid()
+//                    ->toString();
+                $tmpFile['collection'] = $name;
+                $tmpFile['is_temporary'] = true;
+
+                $file = $tmpFile;
             }
             else {
-                if ($this->media[$name] instanceof \Spatie\MediaLibrary\MediaCollections\Models\Media) {
-                    $this->media[$name] = $this->media[$name]->toArray();
-                }
-
-                $preview = [
-                    'uuid' => $this->media[$name]['uuid'],
-                    'collection' => $name,
-                    'name' => $this->media[$name]['file_name'],
-                    'size' => $this->media[$name]['size'],
-                    'url' => $this->media[$name]['original_url'],
-                ];
+                $file['is_temporary'] = false;
             }
         @endphp
-        {{--        @dd($this->media[$name])--}}
-        {{--         $tmp['name'] --}}
         <span class="input-group-text">
-            <a wire:click="$emit('deleteMedia', '{{ $preview['collection'] }}', '{{ $preview['uuid'] }}')"
+            <a wire:click="$emit('deleteMedia', '{{ $name }}', '{{ $file['uuid'] }}')"
                class="cursor-pointer link-secondary" data-bs-toggle="tooltip" data-bs-placement="top"
                aria-label="{{ __('Delete') }}" data-bs-original-title="{{ __('Delete') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
@@ -64,8 +65,8 @@
                     <path d="M6 6l12 12"></path>
                 </svg>
             </a>
-            @if($preview['url'])
-                <a href="{{ $preview['url'] }}" data-fslightbox="{{ $preview['collection'] }}"
+            @if($file['original_url'])
+                <a href="{{ $file['original_url'] }}" data-fslightbox="{{ $name }}"
                    class="link-secondary ms-2"
                    data-bs-toggle="tooltip" data-bs-placement="top"
                    aria-label="{{ __('View') }}" data-bs-original-title="{{ __('View') }}">
@@ -79,8 +80,73 @@
                 </a>
             @endif
         </span>
-        <x-form.error field="media.{{ $name }}"/>
-    @endif
+    @endforeach
+
+    <x-form.error field="media.{{ $name }}.*"/>
+
+    {{--    @if($this->media[$name])--}}
+    {{--        @php--}}
+    {{--            if ($this->media[$name] instanceof \Livewire\TemporaryUploadedFile) {--}}
+    {{--                try {--}}
+    {{--                    $url = $this->media[$name]->temporaryUrl();--}}
+    {{--                } catch (\Exception) {--}}
+    {{--                    $url = '';--}}
+    {{--                }--}}
+
+    {{--                $preview = [--}}
+    {{--                    'uuid' => Str::orderedUuid()--}}
+    {{--                        ->toString(),--}}
+    {{--                    'collection' => $name,--}}
+    {{--                    'name' => $this->media[$name]->getClientOriginalName(),--}}
+    {{--                    'size' => $this->media[$name]->getSize(),--}}
+    {{--                    'url' => $url,--}}
+    {{--                ];--}}
+    {{--            }--}}
+    {{--            else {--}}
+    {{--                if ($this->media[$name] instanceof \Spatie\MediaLibrary\MediaCollections\Models\Media) {--}}
+    {{--                    $this->media[$name] = $this->media[$name]->toArray();--}}
+    {{--                }--}}
+
+    {{--                $preview = [--}}
+    {{--                    'uuid' => $this->media[$name]['uuid'],--}}
+    {{--                    'collection' => $name,--}}
+    {{--                    'name' => $this->media[$name]['file_name'],--}}
+    {{--                    'size' => $this->media[$name]['size'],--}}
+    {{--                    'url' => $this->media[$name]['original_url'],--}}
+    {{--                ];--}}
+    {{--            }--}}
+    {{--        @endphp--}}
+    {{--        --}}{{--        @dd($this->media[$name])--}}
+    {{--        --}}{{--         $tmp['name'] --}}
+    {{--        <span class="input-group-text">--}}
+    {{--            <a wire:click="$emit('deleteMedia', '{{ $preview['collection'] }}', '{{ $preview['uuid'] }}')"--}}
+    {{--               class="cursor-pointer link-secondary" data-bs-toggle="tooltip" data-bs-placement="top"--}}
+    {{--               aria-label="{{ __('Delete') }}" data-bs-original-title="{{ __('Delete') }}">--}}
+    {{--                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"--}}
+    {{--                     stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"--}}
+    {{--                     stroke-linejoin="round">--}}
+    {{--                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>--}}
+    {{--                    <path d="M18 6l-12 12"></path>--}}
+    {{--                    <path d="M6 6l12 12"></path>--}}
+    {{--                </svg>--}}
+    {{--            </a>--}}
+    {{--            @if($preview['url'])--}}
+    {{--                <a href="{{ $preview['url'] }}" data-fslightbox="{{ $preview['collection'] }}"--}}
+    {{--                   class="link-secondary ms-2"--}}
+    {{--                   data-bs-toggle="tooltip" data-bs-placement="top"--}}
+    {{--                   aria-label="{{ __('View') }}" data-bs-original-title="{{ __('View') }}">--}}
+    {{--                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"--}}
+    {{--                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"--}}
+    {{--                         stroke-linejoin="round">--}}
+    {{--                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>--}}
+    {{--                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>--}}
+    {{--                        <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"></path>--}}
+    {{--                    </svg>--}}
+    {{--                </a>--}}
+    {{--            @endif--}}
+    {{--        </span>--}}
+    {{--        <x-form.error field="media.{{ $name }}"/>--}}
+    {{--    @endif--}}
 </div>
 @if($hint)
     <x-form.hint message="{{ $hint }}"/>

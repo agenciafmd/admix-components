@@ -23,6 +23,7 @@ return [
         'form.checkbox' => Forms\Inputs\Checkbox::class,
         'form.email' => Forms\Inputs\Email::class,
         'form.file' => Forms\Inputs\File::class,
+        'form.files' => Forms\Inputs\Files::class,
         'form.input' => Forms\Inputs\Input::class,
         'form.number' => Forms\Inputs\Number::class,
         'form.password' => Forms\Inputs\Password::class,
