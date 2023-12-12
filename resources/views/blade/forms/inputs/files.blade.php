@@ -85,9 +85,15 @@
                 <input type="checkbox" wire:model.lazy="selectedMedia" value="{{ $file['uuid'] }}"
                        class="form-imagecheck-input">
                 <span class="form-imagecheck-figure">
-                    <img src="{{ $file['original_url'] }}"
-                         alt="{{ $file['file_name'] }}"
-                         class="form-imagecheck-image">
+                    @if(Str::of($file['original_url'] ?: '')->pipe(fn ($string) => strtok($string, '?'))->lower()->endsWith(['jpeg', 'jpg', 'png', 'gif']))
+                        <img src="{{ $file['original_url'] }}"
+                             alt="{{ $file['file_name'] }}"
+                             class="form-imagecheck-image">
+                    @else
+                        <span class="avatar avatar-xl form-imagecheck-image">
+                            {{ Str::of($file['file_name'])->afterLast('.')->upper() }}
+                        </span>
+                    @endif
                     @if($file['is_temporary'])
                         colocar máscara de não subiu a img ainda
                     @endif

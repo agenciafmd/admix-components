@@ -12,7 +12,7 @@ trait WithMediaUploads
 
     public function deleteMedia(string $collection, string $id = ''): void
     {
-        $uuids = $id ? Arr::wrap($id) : $this->selectedMedia;
+        $uuids = ($id !== '') ? Arr::wrap($id) : $this->selectedMedia;
 
         foreach ($uuids as $uuid) {
             if (Str::of($uuid)

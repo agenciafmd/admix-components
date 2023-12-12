@@ -168,12 +168,7 @@ trait InteractsWithMediaUploads
                 }
 
                 if ($rule === 'image') {
-                    return [
-                        'jpeg',
-                        'jpg',
-                        'png',
-                        'gif',
-                    ];
+                    return $this->imageExtensions();
                 }
 
                 return null;
@@ -253,7 +248,7 @@ trait InteractsWithMediaUploads
     {
         $rules = $this->mappedMedia[$collection]['rules'];
 
-        return collect($rules)
+        $dimensions = collect($rules)
             ->map(function ($rule) {
                 if (Str::of($rule)
                     ->startsWith('dimensions:')) {
@@ -265,15 +260,19 @@ trait InteractsWithMediaUploads
             })
             ->filter()
             ->flatten()
-            ->first()
-            ->explode(',')
-            ->mapWithKeys(function ($dimension) {
-                $localDimension = Str::of($dimension)
-                    ->explode('=');
-                return [
-                    $localDimension[0] => $localDimension[1],
-                ];
-            });
+            ->first();
+        if ($dimensions) {
+            return $dimensions->explode(',')
+                ->mapWithKeys(function ($dimension) {
+                    $localDimension = Str::of($dimension)
+                        ->explode('=');
+                    return [
+                        $localDimension[0] => $localDimension[1],
+                    ];
+                });
+        }
+
+        return collect();
     }
 
     private function isImage(string $collection): bool
@@ -302,5 +301,15 @@ trait InteractsWithMediaUploads
     public function isSingleMedia(string $collection): bool
     {
         return $this->mappedMedia[$collection]['single'];
+    }
+
+    public function imageExtensions(): array
+    {
+        return [
+            'jpeg',
+            'jpg',
+            'png',
+            'gif',
+        ];
     }
 }
