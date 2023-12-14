@@ -26,8 +26,9 @@ trait WithMediaUploads
                     ->loadMappedMedia();
             } else {
                 $this->resetValidation("media.{$collection}.{$uuid}");
-                unset($this->media[$collection][$uuid]);
+                unset($this->media[$collection][$uuid], $this->meta[$collection][$uuid]);
                 $this->media[$collection] = array_values($this->media[$collection]);
+                $this->meta[$collection] = array_values($this->meta[$collection]);
             }
         }
 

@@ -57,32 +57,35 @@ trait InteractsWithMediaUploads
             ->toMediaCollection($collection);
     }
 
-    public function syncMedia(array $media): void
+    public function syncMedia(array $media, array $meta): void
     {
-        collect($media)->each(function ($files, $collection) {
-
+        collect($media)->each(function ($files, $collection) use ($meta) {
             if ($this->isSingleMedia($collection)) {
                 $files = [end($files)];
             }
-
-            collect($files)->each(function ($file) use ($collection) {
+            collect($files)->each(function ($file, $key) use ($collection, $meta) {
                 if ($file instanceof TemporaryUploadedFile) {
                     $file = $file->store('tmp');
                 }
-
                 if (is_string($file)) {
-                    $this->attachMedia($file, $collection);
+                    $this->attachMedia($file, $collection, $meta[$collection][$key] ?? []);
                 }
             });
-
-//            if ($file instanceof TemporaryUploadedFile) {
-//                $file = $file->store('tmp');
-//            }
-//
-//            if (is_string($file)) {
-//                $this->attachMedia($file, $collection);
-//            }
         });
+
+        if (!count($media) && count($meta)) {
+            collect($meta)->each(function ($files, $collection) {
+                collect($files)->each(function ($file, $uuid) use ($collection) {
+                    $media = $this->getMedia($collection)
+                        ->where('uuid', $uuid)
+                        ->first();
+                    if ($media) {
+                        $media->custom_properties = $file;
+                        $media->save();
+                    }
+                });
+            });
+        }
     }
 
     public function defaultMediaName(): string
@@ -108,6 +111,26 @@ trait InteractsWithMediaUploads
         return $media;
     }
 
+    public function loadMappedMeta(): array
+    {
+        $meta = [];
+        collect($this->mappedMedia)->each(function ($file, $collection) use (&$meta) {
+//            if ($file['single']) {
+//                $media[$collection] = $this->getFirstMedia($collection);
+//            } else {
+            $meta[$collection] = $this->getMedia($collection)
+                ->mapWithKeys(function ($item) {
+                    return [
+                        $item->uuid => $item->custom_properties,
+                    ];
+                })
+                ->toArray();
+//            }
+        });
+
+        return $meta;
+    }
+
     public function loadMappedMediaRules(mixed $media): array
     {
         /* todo */
@@ -125,6 +148,10 @@ trait InteractsWithMediaUploads
 //                'array',
 //            ];
         });
+
+        $rules['meta'] = [
+            'array',
+        ];
 
         return $rules;
     }

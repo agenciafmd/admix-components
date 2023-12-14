@@ -99,6 +99,9 @@
                     @endif
                 </span>
             </label>
+            {{--            @dump($this->loadedMeta)--}}
+            <input type="text" wire:model.lazy="meta.{{ $name }}.{{ $file['uuid'] }}.title">
+            <input type="text" wire:model.lazy="meta.{{ $name }}.{{ $file['uuid'] }}.description">
             <x-form.error field="media.{{ $name }}.{{ $key }}"/>
 
             <a wire:click="$emit('deleteMedia', '{{ $name }}', '{{ $file['uuid'] }}')">Remover</a>
