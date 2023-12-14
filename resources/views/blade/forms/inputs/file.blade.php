@@ -66,9 +66,15 @@
                 </svg>
             </a>
             @if($file['original_url'])
-                <a href="{{ $file['original_url'] }}" data-fslightbox="{{ $name }}"
+                <a href="{{ $file['original_url'] }}"
+                   @if(Str::of($file['original_url'] ?: '')->pipe(fn ($string) => strtok($string, '?'))->lower()->endsWith(['jpeg', 'jpg', 'png', 'gif']))
+                       data-fslightbox="{{ $name }}"
+                   @else
+                       target="_blank"
+                   @endif
                    class="link-secondary ms-2"
-                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="top"
                    aria-label="{{ __('View') }}" data-bs-original-title="{{ __('View') }}">
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
